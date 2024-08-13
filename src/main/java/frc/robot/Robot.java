@@ -4,50 +4,77 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class, specifically it contains
  * the code necessary to operate a robot with tank drive.
  */
 public class Robot extends TimedRobot {
-  
-  private double m_leftStick;
-  private double m_rightStick;
-  private final TalonSRX leftmotor=new TalonSRX(4);
-  private final TalonSRX leftmotorfollow=new TalonSRX(5);
-  private final TalonSRX rightmotor=new TalonSRX(6);
-  private final TalonSRX rightmotorfollow=new TalonSRX(7);
-  PS4Controller controller=new PS4Controller(0);
+   private static Robot   instance;
+  private Command m_autonomousCommand;
+
  
+  private RobotContainer m_robotContainer;
 
   @Override
   public void robotInit() {
-    rightmotor.setInverted(true);
-    rightmotorfollow.setInverted(true);
-    rightmotorfollow.follow(rightmotor);
-    leftmotorfollow.follow(leftmotor);
     
     
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
-    
+    m_robotContainer = new RobotContainer();
+    System.gc();
+  }
+  public Robot()
+  {
+    instance = this;
+  }
 
-    
-    m_leftStick =-controller.getLeftY();
-    m_rightStick = -controller.getRightY();
+  public static Robot getInstance()
+  {
+    return instance;
+  }
+
+  @Override
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
+
+  @Override
+  public void disabledInit() {}
+
+  @Override
+  public void disabledPeriodic() {}
+
+  @Override
+  public void autonomousInit() {
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.schedule();
+    // }
+  }
+
+  @Override
+  public void autonomousPeriodic() {}
+
+  @Override
+  public void teleopInit() {
+
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
+
   }
 
   @Override
   public void teleopPeriodic() {
     
-    leftmotor.set(TalonSRXControlMode.PercentOutput,m_leftStick);
-    rightmotor.set(TalonSRXControlMode.PercentOutput,m_rightStick);
-  
+
   }
+
+ 
 }
