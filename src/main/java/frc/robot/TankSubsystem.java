@@ -1,5 +1,6 @@
 package frc.robot;
-
+//TODO: add pathplanner
+//TODO:auto stuff
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 

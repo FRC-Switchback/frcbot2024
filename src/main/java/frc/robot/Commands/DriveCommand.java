@@ -6,8 +6,8 @@ import frc.robot.TankSubsystem;
 
 
 public class DriveCommand extends Command{
-    private CommandXboxController controller;
-    private TankSubsystem tank;
+    private final CommandXboxController controller;
+    private final TankSubsystem tank;
 
     public DriveCommand(CommandXboxController controller, TankSubsystem tank){
         this.controller=controller;
