@@ -16,7 +16,7 @@ public class DriveCommand extends Command{
 
     @Override
     public void execute(){
-        tank.driveTeleOp(controller.getLeftY(), controller.getRightY());
+        tank.drive(controller.getLeftY(), controller.getRightY());
     }
     @Override
     public boolean isFinished(){
