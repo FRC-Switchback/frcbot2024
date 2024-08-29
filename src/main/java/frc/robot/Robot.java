@@ -56,7 +56,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    m_robotContainer.intake.runPid();
+  }
 
   @Override
   public void teleopInit() {
@@ -69,8 +71,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    
-
+    m_robotContainer.intake.runPid();
   }
 
  
