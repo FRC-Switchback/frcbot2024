@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSubsystem extends SubsystemBase{//MAKE SURE THE INTAKE CAN NOT GO PAST ITS 0
     //IF IT GOES PAST ITS 0 PID WILL FREAK OUT(sorry for all caps)
-    private double intakeDownSetpoint=0;//tune irl
-    private double intakeStowSetpoint=0;//tune irl
+    private final double intakeDownSetpoint=0;//tune irl
+    private final double intakeStowSetpoint=0;//tune irl
 
-    private Encoder intakeEncoder=new Encoder(0, 1);
-    private VictorSPX intakeMotor=new VictorSPX(9);
-    private VictorSPX intakeAcuator=new VictorSPX(10);
+    private final Encoder intakeEncoder=new Encoder(0, 1);
+    private final VictorSPX intakeMotor=new VictorSPX(9);
+    private final VictorSPX intakeAcuator=new VictorSPX(10);
 
-    private PIDController pid=new PIDController(0, 0, 0);// tune this irl
+    private final PIDController pid=new PIDController(0, 0, 0);// tune this irl
    
     public void init(){
         intakeEncoder.reset();

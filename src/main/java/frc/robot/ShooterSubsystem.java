@@ -5,8 +5,8 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ShooterSubsystem extends SubsystemBase{
-    private VictorSPX shooterLeft=new VictorSPX(7);
-    private VictorSPX shooterRight=new VictorSPX(8);
+    private final VictorSPX shooterLeft=new VictorSPX(7);
+    private final VictorSPX shooterRight=new VictorSPX(8);
 
     public void init(){
         shooterRight.setInverted(true);
