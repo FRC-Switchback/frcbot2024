@@ -40,11 +40,11 @@ public class RobotContainer {
      drive.setDefaultCommand(driveCommand);
     //SmartDashboard.putData("Autos", AutoChooser);
       SmartDashboard.putNumber("Drive Test Command Distance (rotations)", 0.5); // change this in Smart Dashboard to test accuracy over different distances
-      SmartDashboard.putNumber("Drive Test Command Voltage", 0.5); // change this in Smart Dashboard to test accuracy over different speeds
+      SmartDashboard.putNumber("Drive Test Command Speed (percentage)", 0.5); // change this in Smart Dashboard to test accuracy over different speeds
       SmartDashboard.putData("Drive Test Command",
           new ProxyCommand(() -> new DriveTestCommand(
               SmartDashboard.getNumber("Drive Test Command Distance (rotations)", 0.5),
-              SmartDashboard.getNumber("Drive Test Command Voltage", 0.5))));
+              SmartDashboard.getNumber("Drive Test Command Speed (percentage)", 0.5))));
   }
 
   private void configureBindings() {
