@@ -49,6 +49,9 @@ public class IntakeSubsystem extends SubsystemBase{//MAKE SURE THE INTAKE CAN NO
     public boolean hasNote(){
         return sensor.get();
     }
-
+    @Override
+    public void periodic() {
+      runPid();
+    }
 
 }
