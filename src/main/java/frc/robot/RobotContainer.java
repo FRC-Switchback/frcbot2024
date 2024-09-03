@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.DriveCommand;
 import frc.robot.Commands.IntakeCommand;
-import frc.robot.Commands.Shootandout;
+import frc.robot.Commands.ShootCommand;
 import frc.robot.Commands.ShooterAmpSpeed;
 import frc.robot.Commands.ShooterFullSpeed;
 import frc.robot.Commands.StowCommand;
@@ -28,11 +28,11 @@ public class RobotContainer {
   IntakeSubsystem intake=new IntakeSubsystem();
   //COMMANDS
  DriveCommand driveCommand=new DriveCommand(driverController,drive);
- Shootandout shootandout= new Shootandout(intake);
- IntakeCommand intakeCommand=new IntakeCommand(intake);
+ ShootCommand shootandout= new ShootCommand(intake,shooter);
+ IntakeCommand intakeCommand=new IntakeCommand(intake,shooter);
  ShooterAmpSpeed shooterAmpSpeed=new ShooterAmpSpeed(shooter);
  ShooterFullSpeed shooterFullSpeed=new ShooterFullSpeed(shooter);
- StowCommand stowCommand=new StowCommand(intake);
+ StowCommand stowCommand=new StowCommand(intake,shooter);
   //TRIGGERS 
   
 
