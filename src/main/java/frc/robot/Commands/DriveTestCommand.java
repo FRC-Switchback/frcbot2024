@@ -8,11 +8,13 @@ public class DriveTestCommand extends Command {
 
     private final TankSubsystem chassis = TankSubsystem.getInstance();
     private final double[] targetDistances;
+    private final double speed;
 
     public DriveTestCommand(double distance, double speed) {
         addRequirements(chassis);
         double[] startDistance = chassis.getDrivePosition();
         this.targetDistances = new double[]{startDistance[0] + distance, startDistance[1] + distance};
+        this.speed = speed;
     }
 
     /**
@@ -29,7 +31,7 @@ public class DriveTestCommand extends Command {
      */
     @Override
     public void execute() {
-        chassis.drive(0.5, 0.5);
+        chassis.drive(speed, speed);
     }
 
     /**

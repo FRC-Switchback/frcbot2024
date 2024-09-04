@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import com.ctre.phoenix6.hardware.CANcoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -22,8 +23,8 @@ public class TankSubsystem extends SubsystemBase{
   private final TalonSRX leftmotorfollow=new TalonSRX(4);
   private final TalonSRX rightmotor=new TalonSRX(5);
   private final TalonSRX rightmotorfollow=new TalonSRX(6);// can ids of the talons
-    private final CANcoder leftEncoder = new CANcoder(11);
-    private final CANcoder rightEncoder = new CANcoder(12);
+    private final Encoder leftEncoder = new Encoder(11, 12);
+    private final Encoder rightEncoder = new Encoder(13, 14);
 
   public void init(){
     rightmotor.setInverted(true);
@@ -38,11 +39,11 @@ public class TankSubsystem extends SubsystemBase{
   }
 
   public double getLeftDrivePosition(){
-    return leftEncoder.getPosition().getValueAsDouble();
+    return leftEncoder.getDistance();
   }
 
   public double getRightDrivePosition(){
-    return rightEncoder.getPosition().getValueAsDouble();
+    return rightEncoder.getDistance();
   }
 
   public double[] getDrivePosition() {
