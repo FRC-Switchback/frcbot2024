@@ -1,8 +1,7 @@
-package frc.robot.Commands;
+package frc.robot.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.IntakeSubsystem;
-import frc.robot.ShooterSubsystem;
+import frc.robot.shooter.ShooterSubsystem;
 
 public class StowCommand extends Command{
     private final IntakeSubsystem subsystem;
