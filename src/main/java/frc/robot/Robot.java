@@ -11,68 +11,64 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
 public class Robot extends TimedRobot {
-   private static Robot   instance;
-  private Command m_autonomousCommand;
+    private static Robot   instance;
+    private Command m_autonomousCommand;
 
  
-  private RobotContainer m_robotContainer;
+    private RobotContainer m_robotContainer;
 
-  @Override
-  public void robotInit() {
+    @Override
+    public void robotInit() {
     
     
-    m_robotContainer = new RobotContainer();
-    System.gc();
-  }
-  public Robot()
-  {
-    instance = this;
-  }
-
-  public static Robot getInstance()
-  {
-    return instance;
-  }
-
-  @Override
-  public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
-  }
-
-  @Override
-  public void disabledInit() {}
-
-  @Override
-  public void disabledPeriodic() {}
-
-  @Override
-  public void autonomousInit() {
-    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-
-    // if (m_autonomousCommand != null) {
-    //   m_autonomousCommand.schedule();
-    // }
-  }
-
-  @Override
-  public void autonomousPeriodic() {
-    m_robotContainer.intake.runPid();
-  }
-
-  @Override
-  public void teleopInit() {
-
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+        m_robotContainer = new RobotContainer();
+        System.gc();
     }
 
-  }
+    public Robot()
+    {
+        instance = this;
+    }
 
-  @Override
-  public void teleopPeriodic() {
-    m_robotContainer.intake.runPid();
-  }
+    public static Robot getInstance()
+    {
+        return instance;
+    }
 
- 
+    @Override
+    public void robotPeriodic() {
+        CommandScheduler.getInstance().run();
+    }
+
+    @Override
+    public void disabledInit() {}
+    @Override
+    public void disabledPeriodic() {}
+
+    @Override
+    public void autonomousInit() {
+        //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+
+        // if (m_autonomousCommand != null) {
+        //   m_autonomousCommand.schedule();
+        // }
+    }
+
+    @Override
+    public void autonomousPeriodic() {
+    }
+
+    @Override
+    public void teleopInit() {
+
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.cancel();
+        }
+
+    }
+
+    @Override
+    public void teleopPeriodic() {
+    }
 }
