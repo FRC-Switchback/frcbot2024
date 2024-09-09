@@ -7,6 +7,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotMap;
+
+import static frc.robot.intake.IntakeConstants.*;
+
 public class IntakeSubsystem extends SubsystemBase{
     private static final IntakeSubsystem INSTANCE = new IntakeSubsystem();
 
@@ -18,33 +22,26 @@ public class IntakeSubsystem extends SubsystemBase{
 
     }
 
-    //MAKE SURE THE INTAKE CAN NOT GO PAST ITS 0
-    //IF IT GOES PAST ITS 0 PID WILL FREAK OUT(sorry for all caps)
-
-    private final double intakeDownSetpoint=0;//tune irl
-    private final double intakeStowSetpoint=0;//tune irl
-
-    private final Encoder intakeEncoder=new Encoder(0, 1);
-    private final VictorSPX intakeMotor=new VictorSPX(9);
-    private final VictorSPX intakeAcuator=new VictorSPX(10);
-    private final DigitalInput sensor=new DigitalInput(2);
-    private final PIDController pid=new PIDController(0, 0, 0);// tune this irl
+    private final Encoder intakeEncoder=new Encoder(RobotMap.INTAKE_ENCODER[0], RobotMap.INTAKE_ENCODER[1]);
+    private final VictorSPX intakeMotor=new VictorSPX(RobotMap.INTAKE_MOTOR);
+    private final VictorSPX intakeAcuator=new VictorSPX(RobotMap.INTAKE_ACTUATOR);
+    private final DigitalInput sensor=new DigitalInput(RobotMap.INTAKE_BEAM_BRAKE);
+    private final PIDController pid=new PIDController(ACTUATOR_PID[0], ACTUATOR_PID[1], ACTUATOR_PID[2]);// tune this irl
    
     public void init(){
         intakeEncoder.reset();
-        pid.setSetpoint(intakeStowSetpoint);
-        pid.setTolerance(40);//tune this until all the sequential commands run
-                             //and dont get stuck bc its not in tolorance
+        pid.setTolerance(SETPOINT_TOLERANCE);
+        pid.setSetpoint(STOW_SETPOINT);
     }
 
     public void deployAndIntake(){
         intakeMotor.set(VictorSPXControlMode.PercentOutput, 1);
-        pid.setSetpoint(intakeDownSetpoint);
+        pid.setSetpoint(DOWN_SETPOINT);
     }
 
     public void stow(){
         intakeMotor.set(VictorSPXControlMode.PercentOutput, 0);
-        pid.setSetpoint(intakeStowSetpoint);
+        pid.setSetpoint(STOW_SETPOINT);
     }
 
     public void outtake(){

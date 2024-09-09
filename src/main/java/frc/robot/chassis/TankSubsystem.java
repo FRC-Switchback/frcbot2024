@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotMap;
 
 public class TankSubsystem extends SubsystemBase{
     private static final TankSubsystem INSTANCE = new TankSubsystem();
@@ -17,18 +18,18 @@ public class TankSubsystem extends SubsystemBase{
         return INSTANCE;
     }
 
-    private final TalonSRX leftmotor=new TalonSRX(3);
-    private final TalonSRX leftmotorfollow=new TalonSRX(4);
-    private final TalonSRX rightmotor=new TalonSRX(5);
-    private final TalonSRX rightmotorfollow=new TalonSRX(6);// can ids of the talons
-    private final CANcoder leftEncoder = new CANcoder(9);
-    private final CANcoder rightEncoder = new CANcoder(10);
+    private final TalonSRX leftmotor=new TalonSRX(RobotMap.CHASSIS_LEFT_MOTOR);
+    private final TalonSRX leftmotorfollow=new TalonSRX(RobotMap.CHASSIS_LEFT_FOLLOW_MOTOR);
+    private final TalonSRX rightmotor=new TalonSRX(RobotMap.CHASSIS_RIGHT_ENCODER);
+    private final TalonSRX rightmotorfollow=new TalonSRX(RobotMap.CHASSIS_RIGHT_FOLLOW_MOTOR);// can ids of the talons
+    private final CANcoder leftEncoder = new CANcoder(RobotMap.CHASSIS_LEFT_ENCODER);
+    private final CANcoder rightEncoder = new CANcoder(RobotMap.CHASSIS_RIGHT_ENCODER);
 
     public void init(){
-      rightmotor.setInverted(true);
-      rightmotorfollow.setInverted(true);
-      rightmotorfollow.follow(rightmotor);//inverting properly(change if robot moves backwords)
-      leftmotorfollow.follow(leftmotor);
+        rightmotor.setInverted(true);
+        rightmotorfollow.setInverted(true);
+        rightmotorfollow.follow(rightmotor);//inverting properly(change if robot moves backwords)
+        leftmotorfollow.follow(leftmotor);
     }
 
     public void drive(double leftStick, double rightStick){
