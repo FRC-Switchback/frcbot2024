@@ -37,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase{
                              //and dont get stuck bc its not in tolorance
     }
 
-    public void intakeDown(){
+    public void deployAndIntake(){
         intakeMotor.set(VictorSPXControlMode.PercentOutput, 1);
         pid.setSetpoint(intakeDownSetpoint);
     }

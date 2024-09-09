@@ -2,19 +2,24 @@ package frc.robot.chassis;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+import java.util.function.DoubleSupplier;
+
 
 public class DriveCommand extends Command{
-    private final CommandXboxController controller;
-    private final TankSubsystem tank;
+    private final TankSubsystem tank = TankSubsystem.getInstance();
 
-    public DriveCommand(CommandXboxController controller, TankSubsystem tank){
-        this.controller=controller;
-        this.tank=tank;
+    private final DoubleSupplier leftY;
+    private final DoubleSupplier rightY;
+
+    public DriveCommand(DoubleSupplier leftY, DoubleSupplier rightY){
+        this.leftY = leftY;
+        this.rightY = rightY;
+        addRequirements(tank);
     }
 
     @Override
     public void execute(){
-        tank.drive(controller.getLeftY(), controller.getRightY());
+        tank.drive(leftY.getAsDouble(), rightY.getAsDouble());
     }
     @Override
     public boolean isFinished(){

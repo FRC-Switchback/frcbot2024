@@ -2,7 +2,7 @@ package frc.robot.shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.intake.StowCommand;
+import frc.robot.intake.IntakeCommands;
 import frc.robot.intake.IntakeSubsystem;
 
 public class ShootCommand extends Command{
@@ -29,6 +29,6 @@ public class ShootCommand extends Command{
 
     @Override
     public void end(boolean interrupted){
-        CommandScheduler.getInstance().schedule(new StowCommand(intakeSubsystem,shooter));
+        CommandScheduler.getInstance().schedule(IntakeCommands.STOW);
     }
 }

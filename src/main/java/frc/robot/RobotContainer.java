@@ -11,31 +11,30 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.chassis.DriveCommand;
 import frc.robot.chassis.TankSubsystem;
-import frc.robot.intake.IntakeCommand;
+import frc.robot.intake.IntakeCommands;
 import frc.robot.intake.IntakeSubsystem;
-import frc.robot.intake.StowCommand;
 import frc.robot.shooter.ShootCommand;
 import frc.robot.shooter.ShooterCommands;
 import frc.robot.shooter.ShooterSubsystem;
 
 
 public class RobotContainer {
-    public static CommandXboxController driverController= new CommandXboxController(0);
-    public static CommandXboxController coDriverController= new CommandXboxController(1);
+    private static final CommandXboxController driverController= new CommandXboxController(0);
+    private static final CommandXboxController coDriverController= new CommandXboxController(1);
 
     //SendableChooser<Command> AutoChooser = new SendableChooser<>();
 
     //SUBSYSTEM
-    TankSubsystem drive = new TankSubsystem();
+    TankSubsystem drive = TankSubsystem.getInstance();
     ShooterSubsystem shooter = ShooterSubsystem.getInstance();
     IntakeSubsystem intake = IntakeSubsystem.getInstance();
     //COMMANDS
-    Command driveCommand = new DriveCommand(driverController,drive);
+    Command driveCommand = new DriveCommand(driverController::getLeftY,driverController::getRightY);
     Command shootCommand = new ShootCommand(intake,shooter);
-    Command intakeCommand = new IntakeCommand(intake,shooter);
+    Command intakeCommand = IntakeCommands.INTAKE;
     Command shooterAmpSpeed = ShooterCommands.SHOOTER_AMP_SPEED;
     Command shooterFullSpeed = ShooterCommands.SHOOTER_FULL_SPEED;
-    Command stowCommand = new StowCommand(intake,shooter);
+    Command stowCommand = IntakeCommands.STOW;
     //TRIGGERS
   
 
