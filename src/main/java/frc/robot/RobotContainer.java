@@ -6,6 +6,7 @@ package frc.robot;
 // import com.pathplanner.lib.commands.FollowPathCommand;
 // import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
@@ -17,6 +18,7 @@ import frc.robot.intake.IntakeSubsystem;
 import frc.robot.shooter.ShootCommand;
 import frc.robot.shooter.ShooterCommands;
 import frc.robot.shooter.ShooterSubsystem;
+import frc.robot.chassis.DriveTestCommand;
 
 
 public class RobotContainer {

@@ -13,6 +13,6 @@ public class RobotMap {
     public static final int CHASSIS_LEFT_FOLLOW_MOTOR = 4;
     public static final int CHASSIS_RIGHT_MOTOR = 5;
     public static final int CHASSIS_RIGHT_FOLLOW_MOTOR = 6;
-    public static final int CHASSIS_LEFT_ENCODER = 9;
-    public static final int CHASSIS_RIGHT_ENCODER = 10;
+    public static final int[] CHASSIS_LEFT_ENCODER = {11, 12};
+    public static final int[] CHASSIS_RIGHT_ENCODER = {13, 14};
 }
