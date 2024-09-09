@@ -1,13 +1,24 @@
-package frc.robot;
+package frc.robot.shooter;
 
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotMap;
+
 public class ShooterSubsystem extends SubsystemBase{
-    private final VictorSPX shooterLeft=new VictorSPX(7);
-    private final VictorSPX shooterRight=new VictorSPX(8);
+    private static final ShooterSubsystem INSTANCE = new ShooterSubsystem();
+
+    public static ShooterSubsystem getInstance(){
+        return INSTANCE;
+    }
+
+    private ShooterSubsystem() {
+
+    }
+
+    private final VictorSPX shooterLeft=new VictorSPX(RobotMap.SHOOTER_LEFT);
+    private final VictorSPX shooterRight=new VictorSPX(RobotMap.SHOOTER_RIGHT);
 
     public void init(){
         shooterRight.setInverted(true);

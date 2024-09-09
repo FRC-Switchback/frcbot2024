@@ -6,65 +6,62 @@ package frc.robot;
 // import com.pathplanner.lib.commands.FollowPathCommand;
 // import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Commands.DriveCommand;
-import frc.robot.Commands.IntakeCommand;
-import frc.robot.Commands.ShootCommand;
-import frc.robot.Commands.ShooterAmpSpeed;
-import frc.robot.Commands.ShooterFullSpeed;
-import frc.robot.Commands.StowCommand;
+import frc.robot.chassis.DriveCommand;
+import frc.robot.chassis.TankSubsystem;
+import frc.robot.intake.IntakeCommands;
+import frc.robot.intake.IntakeSubsystem;
+import frc.robot.shooter.ShootCommand;
+import frc.robot.shooter.ShooterCommands;
+import frc.robot.shooter.ShooterSubsystem;
 
 
 public class RobotContainer {
-  public static CommandXboxController driverController= new CommandXboxController(0); 
-  public static CommandXboxController coDriverController= new CommandXboxController(1); 
+    private static final CommandXboxController driverController= new CommandXboxController(0);
+    private static final CommandXboxController coDriverController= new CommandXboxController(1);
 
-  //SendableChooser<Command> AutoChooser = new SendableChooser<>();
+    //SendableChooser<Command> AutoChooser = new SendableChooser<>();
 
-  //SUBSYSTEM
-  TankSubsystem drive=new TankSubsystem();
-  ShooterSubsystem shooter=new ShooterSubsystem();
-  IntakeSubsystem intake=new IntakeSubsystem();
-  //COMMANDS
- DriveCommand driveCommand=new DriveCommand(driverController,drive);
- ShootCommand shootandout= new ShootCommand(intake,shooter);
- IntakeCommand intakeCommand=new IntakeCommand(intake,shooter);
- ShooterAmpSpeed shooterAmpSpeed=new ShooterAmpSpeed(shooter);
- ShooterFullSpeed shooterFullSpeed=new ShooterFullSpeed(shooter);
- StowCommand stowCommand=new StowCommand(intake,shooter);
-  //TRIGGERS 
+    //SUBSYSTEM
+    TankSubsystem drive = TankSubsystem.getInstance();
+    ShooterSubsystem shooter = ShooterSubsystem.getInstance();
+    IntakeSubsystem intake = IntakeSubsystem.getInstance();
+    //COMMANDS
+    Command driveCommand = new DriveCommand(driverController::getLeftY,driverController::getRightY);
+    Command shootCommand = new ShootCommand(intake,shooter);
+    Command intakeCommand = IntakeCommands.INTAKE;
+    Command shooterAmpSpeed = ShooterCommands.SHOOTER_AMP_SPEED;
+    Command shooterFullSpeed = ShooterCommands.SHOOTER_FULL_SPEED;
+    Command stowCommand = IntakeCommands.STOW;
+    //TRIGGERS
   
 
-  public RobotContainer() {
-    registerNamedCommands();
-    configureBindings();
-     drive.init();
-     drive.setDefaultCommand(driveCommand);
-    //SmartDashboard.putData("Autos", AutoChooser);
-    
-  }
+    public RobotContainer() {
+        registerNamedCommands();
+        configureBindings();
+        drive.init();
+        drive.setDefaultCommand(driveCommand);
+        //SmartDashboard.putData("Autos", AutoChooser);
+    }
 
-  private void configureBindings() {
-    coDriverController.rightTrigger().onTrue(shootandout);//right trigger shoots the note
-    coDriverController.leftTrigger().onTrue(intakeCommand);//READ: left trigger intakes, since there is no way to know if we have a note please press stow as soon as the note is in enough
-    coDriverController.b().onTrue(new ParallelCommandGroup(stowCommand, shooterAmpSpeed));//b stows and brings shooter to the slower amp speed
-    coDriverController.a().onTrue(shooterAmpSpeed);//a sets flywheel to amp speed
-    coDriverController.y().onTrue(shooterFullSpeed);//y sets full shooter speed
+    private void configureBindings() {
+        coDriverController.rightTrigger(0.5).onTrue(shootCommand);//right trigger shoots the note
+        coDriverController.leftTrigger().whileTrue(intakeCommand);
+        coDriverController.b().onTrue(new ParallelCommandGroup(stowCommand, shooterAmpSpeed));//b stows and brings shooter to the slower amp speed
+                                                                                              // this shouldn't be needed since the intake command already stows when a note is detected
+        coDriverController.a().onTrue(shooterAmpSpeed);//a sets flywheel to amp speed
+        coDriverController.y().onTrue(shooterFullSpeed);//y sets full shooter speed
+    }
 
-  }
+    public void registerNamedCommands() {
 
-  public void registerNamedCommands() {
+    }
 
-  }
+//    public Command getAutonomousCommand() {
+//        //return AutoChooser.getSelected();
+//    }
 
-  public void setAutoCommands(){
-
-  }
-
-  // public Command getAutonomousCommand() {
-  //   //return AutoChooser.getSelected(); 
-  // }
-  
 
 }
