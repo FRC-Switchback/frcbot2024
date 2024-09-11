@@ -20,7 +20,7 @@ public class TankSubsystem extends SubsystemBase{
 
     private final TalonSRX leftmotor=new TalonSRX(RobotMap.CHASSIS_LEFT_MOTOR);
     private final TalonSRX leftmotorfollow=new TalonSRX(RobotMap.CHASSIS_LEFT_FOLLOW_MOTOR);
-    private final TalonSRX rightmotor=new TalonSRX(RobotMap.CHASSIS_RIGHT_ENCODER);
+    private final TalonSRX rightmotor=new TalonSRX(RobotMap.CHASSIS_RIGHT_MOTOR);
     private final TalonSRX rightmotorfollow=new TalonSRX(RobotMap.CHASSIS_RIGHT_FOLLOW_MOTOR);// can ids of the talons
     private final CANcoder leftEncoder = new CANcoder(RobotMap.CHASSIS_LEFT_ENCODER);
     private final CANcoder rightEncoder = new CANcoder(RobotMap.CHASSIS_RIGHT_ENCODER);

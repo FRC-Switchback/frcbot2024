@@ -8,6 +8,9 @@ public class IntakeCommands {
     private static final IntakeSubsystem intake = IntakeSubsystem.getInstance();
     private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
 
-    public static final Command STOW = Commands.run(intake::stow, intake).andThen(Commands.run(shooter::shooterSpeedAmp));
-    public static final Command INTAKE = Commands.run(intake::deployAndIntake, intake).until(() -> !intake.hasNote()).andThen(STOW);
+    public static final Command STOW = Commands.run(intake::stow, intake)
+            .andThen(Commands.run(shooter::shooterSpeedAmp));
+    public static final Command INTAKE = Commands.run(intake::deployAndIntake, intake)
+            .until(() -> !intake.hasNote())
+            .andThen(STOW);
 }

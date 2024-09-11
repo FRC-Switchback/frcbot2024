@@ -1,5 +1,6 @@
 package frc.robot.intake;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -22,20 +23,35 @@ public class IntakeSubsystem extends SubsystemBase{
 
     }
 
-    private final Encoder intakeEncoder=new Encoder(RobotMap.INTAKE_ENCODER[0], RobotMap.INTAKE_ENCODER[1]);
-    private final VictorSPX intakeMotor=new VictorSPX(RobotMap.INTAKE_MOTOR);
-    private final VictorSPX intakeAcuator=new VictorSPX(RobotMap.INTAKE_ACTUATOR);
-    private final DigitalInput sensor=new DigitalInput(RobotMap.INTAKE_BEAM_BRAKE);
-    private final PIDController pid=new PIDController(ACTUATOR_PID[0], ACTUATOR_PID[1], ACTUATOR_PID[2]);// tune this irl
+    private final Encoder intakeEncoder = new Encoder(RobotMap.INTAKE_ENCODER[0], RobotMap.INTAKE_ENCODER[1]);
+    private final VictorSPX intakeMotor = new VictorSPX(RobotMap.INTAKE_MOTOR);
+    private final VictorSPX passthroughMotor = new VictorSPX(RobotMap.PASSTHROUGH_MOTOR);
+    private final VictorSPX intakeAcuator = new VictorSPX(RobotMap.INTAKE_ACTUATOR);
+    private final DigitalInput sensor = new DigitalInput(RobotMap.INTAKE_BEAM_BRAKE);
+    private final PIDController pid = new PIDController(ACTUATOR_PID[0], ACTUATOR_PID[1], ACTUATOR_PID[2]);// tune this irl
    
     public void init(){
         intakeEncoder.reset();
+        intakeAcuator.setNeutralMode(NeutralMode.Brake);
         pid.setTolerance(SETPOINT_TOLERANCE);
         pid.setSetpoint(STOW_SETPOINT);
     }
 
     public void deployAndIntake(){
+        deploy();
+        intake();
+    }
+
+    public void passthrough() {
+        passthroughMotor.set(VictorSPXControlMode.PercentOutput, 1);
         intakeMotor.set(VictorSPXControlMode.PercentOutput, 1);
+    }
+
+    public void intake(){
+        intakeMotor.set(VictorSPXControlMode.PercentOutput, 1);
+    }
+
+    public void deploy() {
         pid.setSetpoint(DOWN_SETPOINT);
     }
 
@@ -46,6 +62,7 @@ public class IntakeSubsystem extends SubsystemBase{
 
     public void outtake(){
         intakeMotor.set(VictorSPXControlMode.PercentOutput, -1);
+        passthroughMotor.set(VictorSPXControlMode.PercentOutput, -1);
     }
 
     public void stopSpinning(){

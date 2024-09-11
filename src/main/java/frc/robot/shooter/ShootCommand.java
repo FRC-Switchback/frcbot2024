@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.intake.IntakeCommands;
 import frc.robot.intake.IntakeSubsystem;
 
+import java.util.logging.Logger;
+
 public class ShootCommand extends Command{
 
     private final IntakeSubsystem intakeSubsystem;
@@ -18,8 +20,8 @@ public class ShootCommand extends Command{
 
     @Override 
     public void initialize(){
-        intakeSubsystem.outtake();
         if (!intakeSubsystem.hasNote()) cancel();
+        intakeSubsystem.passthrough();
     }
 
     @Override 

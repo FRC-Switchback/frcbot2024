@@ -42,6 +42,8 @@ public class RobotContainer {
         registerNamedCommands();
         configureBindings();
         drive.init();
+        intake.init();
+        shooter.init();
         drive.setDefaultCommand(driveCommand);
         //SmartDashboard.putData("Autos", AutoChooser);
     }
