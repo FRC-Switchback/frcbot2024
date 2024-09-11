@@ -6,6 +6,7 @@ public class RobotMap {
 
     public static final int[] INTAKE_ENCODER = {0, 1};
     public static final int INTAKE_MOTOR = 9;
+    public static final int PASSTHROUGH_MOTOR = 11;
     public static final int INTAKE_ACTUATOR = 10;
     public static final int INTAKE_BEAM_BRAKE = 2;
 
