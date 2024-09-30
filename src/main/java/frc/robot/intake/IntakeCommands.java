@@ -11,6 +11,6 @@ public class IntakeCommands {
     public static final Command STOW = Commands.run(intake::stow, intake)
             .andThen(Commands.run(shooter::shooterSpeedAmp));
     public static final Command INTAKE = Commands.run(intake::deployAndIntake, intake)
-            .until(() -> !intake.hasNote())
-            .andThen(STOW);
+            .until(() -> !intake.hasNote());
+    public static final Command AUTO_INTAKE = Commands.run(intake::deployAndIntake, intake);
 }
