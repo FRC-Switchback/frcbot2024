@@ -10,8 +10,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.chassis.DriveCommand;
 import frc.robot.chassis.TankSubsystem;
@@ -20,6 +22,7 @@ import frc.robot.intake.IntakeSubsystem;
 import frc.robot.shooter.ShootCommand;
 import frc.robot.shooter.ShooterCommands;
 import frc.robot.shooter.ShooterSubsystem;
+import frc.robot.chassis.DriveTestCommand;
 
 
 public class RobotContainer {
@@ -49,6 +52,13 @@ public class RobotContainer {
         initializeSubsystems();
         drive.setDefaultCommand(driveCommand);
         SmartDashboard.putData("Autos", autoChooser);
+        //SmartDashboard.putData("Autos", AutoChooser);
+        SmartDashboard.putNumber("Drive Test Command Distance (rotations)", 0.5); // change this in Smart Dashboard to test accuracy over different distances
+        SmartDashboard.putNumber("Drive Test Command Speed (percentage)", 0.5); // change this in Smart Dashboard to test accuracy over different speeds
+        SmartDashboard.putData("Drive Test Command",
+                new ProxyCommand(() -> new DriveTestCommand(
+                        SmartDashboard.getNumber("Drive Test Command Distance (rotations)", 0.5),
+                        SmartDashboard.getNumber("Drive Test Command Speed (percentage)", 0.5))));
     }
 
     private void configureBindings() {
