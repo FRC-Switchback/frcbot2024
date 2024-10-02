@@ -36,10 +36,10 @@ public class TankSubsystem extends SubsystemBase{
     private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navx.getRotation2d(),
             getLeftDrivePosition(),
             getRightDrivePosition());
-    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(ChassisConstants.CHASSIS_WIDTH_METERS);
+    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(TankConstants.CHASSIS_WIDTH_METERS);
     private Pose2d currentPose = new Pose2d();
-    private final PIDController leftDrivePidController = new PIDController(ChassisConstants.DRIVE_PID.kP, ChassisConstants.DRIVE_PID.kI, ChassisConstants.DRIVE_PID.kD);
-    private final PIDController rightDrivePidController = new PIDController(ChassisConstants.DRIVE_PID.kP, ChassisConstants.DRIVE_PID.kI, ChassisConstants.DRIVE_PID.kD);
+    private final PIDController leftDrivePidController = new PIDController(TankConstants.DRIVE_PID.kP, TankConstants.DRIVE_PID.kI, TankConstants.DRIVE_PID.kD);
+    private final PIDController rightDrivePidController = new PIDController(TankConstants.DRIVE_PID.kP, TankConstants.DRIVE_PID.kI, TankConstants.DRIVE_PID.kD);
     private double leftLastPosition = getLeftDrivePosition();
     private double rightLastPosition = getRightDrivePosition();
     private double leftPosition = getLeftDrivePosition();
@@ -89,11 +89,11 @@ public class TankSubsystem extends SubsystemBase{
     }
 
     public double getLeftDrivePosition(){
-        return leftEncoder.getDistance() * ChassisConstants.GEAR_RATIO * ChassisConstants.WHEEL_CIRCUMFERENCE_METERS;
+        return leftEncoder.getDistance() * TankConstants.GEAR_RATIO * TankConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
 
     public double getRightDrivePosition(){
-        return rightEncoder.getDistance() * ChassisConstants.GEAR_RATIO * ChassisConstants.WHEEL_CIRCUMFERENCE_METERS;
+        return rightEncoder.getDistance() * TankConstants.GEAR_RATIO * TankConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
 
 

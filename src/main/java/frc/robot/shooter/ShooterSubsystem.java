@@ -22,6 +22,7 @@ public class ShooterSubsystem extends SubsystemBase{
 
     public void init(){
         shooterRight.setInverted(true);
+        shooterSpeedAmp();
     }
 
     public void shooterSpeedSpeaker(){
@@ -32,5 +33,10 @@ public class ShooterSubsystem extends SubsystemBase{
     public void shooterSpeedAmp(){
         shooterRight.set(VictorSPXControlMode.PercentOutput, 0.5);
         shooterLeft.set(VictorSPXControlMode.PercentOutput, 0.5);
+    }
+
+    public void shooterSpeedOff(){
+        shooterRight.set(VictorSPXControlMode.PercentOutput, 0);
+        shooterLeft.set(VictorSPXControlMode.PercentOutput, 0);
     }
 }

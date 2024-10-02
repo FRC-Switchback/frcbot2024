@@ -49,6 +49,7 @@ public class IntakeSubsystem extends SubsystemBase{
 
     public void intake(){
         intakeMotor.set(VictorSPXControlMode.PercentOutput, 1);
+        passthroughMotor.set(VictorSPXControlMode.PercentOutput, 1);
     }
 
     public void deploy() {

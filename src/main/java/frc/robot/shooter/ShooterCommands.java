@@ -8,4 +8,5 @@ public class ShooterCommands {
 
     public static final Command SHOOTER_AMP_SPEED = Commands.run(shooter::shooterSpeedAmp, shooter);
     public static final Command SHOOTER_FULL_SPEED = Commands.run(shooter::shooterSpeedSpeaker, shooter);
+    public static final Command SHOOTER_OFF = Commands.runOnce(shooter::shooterSpeedOff, shooter);
 }

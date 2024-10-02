@@ -13,4 +13,5 @@ public class IntakeCommands {
     public static final Command INTAKE = Commands.run(intake::deployAndIntake, intake)
             .until(() -> !intake.hasNote());
     public static final Command AUTO_INTAKE = Commands.run(intake::deployAndIntake, intake);
+    public static final Command EJECT = Commands.run(intake::outtake);
 }

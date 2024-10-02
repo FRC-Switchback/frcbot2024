@@ -41,10 +41,11 @@ public class RobotContainer {
     Command shootCommand = new ShootCommand(intake,shooter);
     Command intakeCommand = IntakeCommands.INTAKE;
     Command autoIntakeCommand = IntakeCommands.AUTO_INTAKE;
+    Command disableFlywheels = ShooterCommands.SHOOTER_OFF;
     Command shooterAmpSpeed = ShooterCommands.SHOOTER_AMP_SPEED;
     Command shooterFullSpeed = ShooterCommands.SHOOTER_FULL_SPEED;
     Command stowCommand = IntakeCommands.STOW;
-  
+    Command ejectCommand = IntakeCommands.EJECT;
 
     public RobotContainer() {
         registerNamedCommands();
@@ -63,12 +64,13 @@ public class RobotContainer {
     }
 
     void configureBindings() {
-        coDriverController.rightTrigger(0.5).onTrue(shootCommand);//right trigger shoots the note
-        coDriverController.leftTrigger().whileTrue(intakeCommand.andThen(stowCommand));
-        coDriverController.b().onTrue(new ParallelCommandGroup(stowCommand, shooterAmpSpeed));//b stows and brings shooter to the slower amp speed
+        coDriverController.rightBumper().onTrue(shootCommand);//right trigger shoots the note
+        coDriverController.leftBumper().whileTrue(intakeCommand.andThen(stowCommand));
+        coDriverController.y().onTrue(new ParallelCommandGroup(stowCommand, shooterAmpSpeed));//b stows and brings shooter to the slower amp speed
                                                                                               // this shouldn't be needed since the intake command already stows when a note is detected
-        coDriverController.a().onTrue(shooterAmpSpeed);//a sets flywheel to amp speed
-        coDriverController.y().onTrue(shooterFullSpeed);//y sets full shooter speed
+        coDriverController.b().onTrue(disableFlywheels);//a sets flywheel to amp speed
+        coDriverController.a().whileTrue(shooterFullSpeed).onFalse(shooterAmpSpeed);//y sets full shooter speed
+        coDriverController.x().whileTrue(ejectCommand);
     }
 
 
