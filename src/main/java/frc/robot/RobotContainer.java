@@ -1,15 +1,16 @@
 package frc.robot;
 
 
-//
 // import com.pathplanner.lib.auto.NamedCommands;
 // import com.pathplanner.lib.commands.FollowPathCommand;
 // import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -29,13 +30,12 @@ public class RobotContainer {
     private static final CommandXboxController driverController= new CommandXboxController(0);
     private static final CommandXboxController coDriverController= new CommandXboxController(1);
 
-    //SendableChooser<Command> AutoChooser = new SendableChooser<>();
+    SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
 
     //SUBSYSTEM
     TankSubsystem drive = TankSubsystem.getInstance();
     ShooterSubsystem shooter = ShooterSubsystem.getInstance();
     IntakeSubsystem intake = IntakeSubsystem.getInstance();
-    SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
     //COMMANDS
     Command driveCommand = new DriveCommand(driverController::getLeftY,driverController::getRightY);
     Command shootCommand = new ShootCommand(intake,shooter);
@@ -50,6 +50,7 @@ public class RobotContainer {
         registerNamedCommands();
         configureBindings();
         initializeSubsystems();
+        configureAutoBuilder();
         drive.setDefaultCommand(driveCommand);
         SmartDashboard.putData("Autos", autoChooser);
         //SmartDashboard.putData("Autos", AutoChooser);
@@ -61,7 +62,7 @@ public class RobotContainer {
                         SmartDashboard.getNumber("Drive Test Command Speed (percentage)", 0.5))));
     }
 
-    private void configureBindings() {
+    void configureBindings() {
         coDriverController.rightTrigger(0.5).onTrue(shootCommand);//right trigger shoots the note
         coDriverController.leftTrigger().whileTrue(intakeCommand.andThen(stowCommand));
         coDriverController.b().onTrue(new ParallelCommandGroup(stowCommand, shooterAmpSpeed));//b stows and brings shooter to the slower amp speed
@@ -70,20 +71,41 @@ public class RobotContainer {
         coDriverController.y().onTrue(shooterFullSpeed);//y sets full shooter speed
     }
 
-    public void initializeSubsystems() {
+
+
+    void initializeSubsystems() {
         drive.init();
         intake.init();
         shooter.init();
     }
 
-    public void registerNamedCommands() {
+    void registerNamedCommands() {
         NamedCommands.registerCommand("Shoot", shootCommand);
         NamedCommands.registerCommand("Intake", autoIntakeCommand);
+    }
+
+    void configureAutoBuilder() {
+        AutoBuilder.configureRamsete(drive::getPose,
+                drive::setPose,
+                drive::getSpeeds,
+                drive::driveChassisSpeeds,
+                new ReplanningConfig(),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    return alliance.filter(value -> value == DriverStation.Alliance.Red).isPresent();
+                },
+                drive);
     }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
 
-
+    public PathPlannerAuto getSelectedAuto() {
+        return (PathPlannerAuto) autoChooser.getSelected();
+    }
 }
