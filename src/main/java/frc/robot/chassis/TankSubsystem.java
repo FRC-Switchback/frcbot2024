@@ -9,11 +9,17 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotMap;
+
+import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 public class TankSubsystem extends SubsystemBase{
     private static final TankSubsystem INSTANCE = new TankSubsystem();
@@ -32,10 +38,10 @@ public class TankSubsystem extends SubsystemBase{
     private final Encoder leftEncoder = new Encoder(RobotMap.CHASSIS_LEFT_ENCODER[0], RobotMap.CHASSIS_LEFT_ENCODER[1]);
     private final Encoder rightEncoder = new Encoder(RobotMap.CHASSIS_RIGHT_ENCODER[0], RobotMap.CHASSIS_RIGHT_ENCODER[1]);
 
-    private final AHRS navx = new AHRS();
-    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navx.getRotation2d(),
-            getLeftDrivePosition(),
-            getRightDrivePosition());
+//    private final AHRS navx = new AHRS();
+//    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navx.getRotation2d(),
+//            getLeftDrivePosition(),
+//            getRightDrivePosition());
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(TankConstants.CHASSIS_WIDTH_METERS);
     private Pose2d currentPose = new Pose2d();
     private final PIDController leftDrivePidController = new PIDController(TankConstants.DRIVE_PID.kP, TankConstants.DRIVE_PID.kI, TankConstants.DRIVE_PID.kD);
@@ -68,9 +74,9 @@ public class TankSubsystem extends SubsystemBase{
         rightLastPosition = rightPosition;
         leftPosition = getLeftDrivePosition();
         rightPosition = getRightDrivePosition();
-        currentPose = odometry.update(navx.getRotation2d(),
-                getLeftDrivePosition() ,
-                getRightDrivePosition());
+//        currentPose = odometry.update(navx.getRotation2d(),
+//                getLeftDrivePosition() ,
+//                getRightDrivePosition());
 
         if (DriverStation.isAutonomous()) {
             leftmotor.set(TalonSRXControlMode.PercentOutput, leftDrivePidController.calculate(getLeftDriveVelocity()));
@@ -112,7 +118,7 @@ public class TankSubsystem extends SubsystemBase{
 
     public void setPose(Pose2d pose) {
         currentPose = pose;
-        odometry.resetPosition(pose.getRotation(), getLeftDrivePosition(), getRightDrivePosition(), pose);
+//        odometry.resetPosition(pose.getRotation(), getLeftDrivePosition(), getRightDrivePosition(), pose);
     }
 
     public Pose2d getPose() {
@@ -128,5 +134,37 @@ public class TankSubsystem extends SubsystemBase{
 
         leftDrivePidController.setSetpoint(wheelSpeeds.leftMetersPerSecond);
         rightDrivePidController.setSetpoint(wheelSpeeds.rightMetersPerSecond);
+    }
+
+    public SysIdRoutine getLeftsysIdRoutine() {
+        return new SysIdRoutine(
+                new SysIdRoutine.Config(
+                        Volts.of(0.25).per(Second),  //Quasistatic Ramp Rate
+                        Volts.of(1), // Dynamic voltage
+                        null,     // Default timeout is acceptable
+                        null),
+                new SysIdRoutine.Mechanism(
+                        (Measure<Voltage> volts) -> leftmotor.set(TalonSRXControlMode.PercentOutput.toControlMode(), volts.magnitude() / 12),
+                        log -> log.motor("motor")
+                                .voltage(Volts.of(leftmotor.getMotorOutputVoltage()))
+                                .angularPosition(Rotations.of(leftEncoder.getDistance()))
+                                .angularVelocity(RotationsPerSecond.of(getLeftDriveVelocity())),
+                        this));
+    }
+
+    public SysIdRoutine getRightsysIdRoutine() {
+        return new SysIdRoutine(
+                new SysIdRoutine.Config(
+                        Volts.of(0.25).per(Second),  //Quasistatic Ramp Rate
+                        Volts.of(1), // Dynamic voltage
+                        null,     // Default timeout is acceptable
+                        null),
+                new SysIdRoutine.Mechanism(
+                        (Measure<Voltage> volts) -> rightmotor.set(TalonSRXControlMode.PercentOutput.toControlMode(), volts.magnitude() / 12),
+                        log -> log.motor("motor")
+                                .voltage(Volts.of(rightmotor.getMotorOutputVoltage()))
+                                .angularPosition(Rotations.of(rightEncoder.getDistance()))
+                                .angularVelocity(RotationsPerSecond.of(getLeftDriveVelocity())),
+                        this));
     }
 }

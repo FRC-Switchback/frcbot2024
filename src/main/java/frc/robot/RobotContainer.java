@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.chassis.DriveCommand;
 import frc.robot.chassis.TankSubsystem;
 import frc.robot.intake.IntakeCommands;
@@ -30,30 +31,28 @@ public class RobotContainer {
     private static final CommandXboxController driverController= new CommandXboxController(0);
     private static final CommandXboxController coDriverController= new CommandXboxController(1);
 
-    SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
-
+    SendableChooser<Command> autoChooser;
     //SUBSYSTEM
     TankSubsystem drive = TankSubsystem.getInstance();
-    ShooterSubsystem shooter = ShooterSubsystem.getInstance();
-    IntakeSubsystem intake = IntakeSubsystem.getInstance();
+//    ShooterSubsystem shooter = ShooterSubsystem.getInstance();
+//    IntakeSubsystem intake = IntakeSubsystem.getInstance();
     //COMMANDS
     Command driveCommand = new DriveCommand(driverController::getLeftY,driverController::getRightY);
-    Command shootCommand = new ShootCommand(intake,shooter);
-    Command intakeCommand = IntakeCommands.INTAKE;
-    Command autoIntakeCommand = IntakeCommands.AUTO_INTAKE;
-    Command disableFlywheels = ShooterCommands.SHOOTER_OFF;
-    Command shooterAmpSpeed = ShooterCommands.SHOOTER_AMP_SPEED;
-    Command shooterFullSpeed = ShooterCommands.SHOOTER_FULL_SPEED;
-    Command stowCommand = IntakeCommands.STOW;
-    Command ejectCommand = IntakeCommands.EJECT;
+//    Command shootCommand = new ShootCommand(intake,shooter);
+//    Command intakeCommand = IntakeCommands.INTAKE;
+//    Command autoIntakeCommand = IntakeCommands.AUTO_INTAKE;
+//    Command disableFlywheels = ShooterCommands.SHOOTER_OFF;
+//    Command shooterAmpSpeed = ShooterCommands.SHOOTER_AMP_SPEED;
+//    Command shooterFullSpeed = ShooterCommands.SHOOTER_FULL_SPEED;
+//    Command stowCommand = IntakeCommands.STOW;
+//    Command ejectCommand = IntakeCommands.EJECT;
 
     public RobotContainer() {
+        configureAutoBuilder();
         registerNamedCommands();
         configureBindings();
         initializeSubsystems();
-        configureAutoBuilder();
         drive.setDefaultCommand(driveCommand);
-        SmartDashboard.putData("Autos", autoChooser);
         //SmartDashboard.putData("Autos", AutoChooser);
         SmartDashboard.putNumber("Drive Test Command Distance (rotations)", 0.5); // change this in Smart Dashboard to test accuracy over different distances
         SmartDashboard.putNumber("Drive Test Command Speed (percentage)", 0.5); // change this in Smart Dashboard to test accuracy over different speeds
@@ -61,29 +60,37 @@ public class RobotContainer {
                 new ProxyCommand(() -> new DriveTestCommand(
                         SmartDashboard.getNumber("Drive Test Command Distance (rotations)", 0.5),
                         SmartDashboard.getNumber("Drive Test Command Speed (percentage)", 0.5))));
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Autos", autoChooser);
     }
 
     void configureBindings() {
-        coDriverController.rightBumper().onTrue(shootCommand);//right trigger shoots the note
-        coDriverController.leftBumper().whileTrue(intakeCommand.andThen(stowCommand));
-        coDriverController.y().onTrue(new ParallelCommandGroup(stowCommand, shooterAmpSpeed));//b stows and brings shooter to the slower amp speed
-                                                                                              // this shouldn't be needed since the intake command already stows when a note is detected
-        coDriverController.b().onTrue(disableFlywheels);//a sets flywheel to amp speed
-        coDriverController.a().whileTrue(shooterFullSpeed).onFalse(shooterAmpSpeed);//y sets full shooter speed
-        coDriverController.x().whileTrue(ejectCommand);
+//        coDriverController.rightBumper().onTrue(shootCommand);//right trigger shoots the note
+//        coDriverController.leftBumper().whileTrue(intakeCommand.andThen(stowCommand));
+//        coDriverController.y().onTrue(new ParallelCommandGroup(stowCommand, shooterAmpSpeed));//b stows and brings shooter to the slower amp speed
+//                                                                                              // this shouldn't be needed since the intake command already stows when a note is detected
+//        coDriverController.b().onTrue(disableFlywheels);//a sets flywheel to amp speed
+//        coDriverController.a().whileTrue(shooterFullSpeed).onFalse(shooterAmpSpeed);//y sets full shooter speed
+//        coDriverController.x().whileTrue(ejectCommand);
+//
+//        SysIdRoutine intakeRoutine = intake.getsysIdRoutine();
+//        driverController.povLeft().whileTrue(intakeRoutine.quasistatic(SysIdRoutine.Direction.kForward));
+//        driverController.povRight().whileTrue(intakeRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
+//        driverController.povUp().whileTrue(intakeRoutine.dynamic(SysIdRoutine.Direction.kForward));
+//        driverController.povDown().whileTrue(intakeRoutine.dynamic(SysIdRoutine.Direction.kReverse));
     }
 
 
 
     void initializeSubsystems() {
         drive.init();
-        intake.init();
-        shooter.init();
+//        intake.init();
+//        shooter.init();
     }
 
     void registerNamedCommands() {
-        NamedCommands.registerCommand("Shoot", shootCommand);
-        NamedCommands.registerCommand("Intake", autoIntakeCommand);
+//        NamedCommands.registerCommand("Shoot", shootCommand);
+//        NamedCommands.registerCommand("Intake", autoIntakeCommand);
     }
 
     void configureAutoBuilder() {

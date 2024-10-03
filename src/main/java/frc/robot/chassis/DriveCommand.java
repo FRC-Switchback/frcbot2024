@@ -1,4 +1,5 @@
 package frc.robot.chassis;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -20,6 +21,7 @@ public class DriveCommand extends Command{
     @Override
     public void execute(){
         tank.drive(leftY.getAsDouble(), rightY.getAsDouble());
+        SmartDashboard.putNumber("Right Y", rightY.getAsDouble());
     }
     @Override
     public boolean isFinished(){
