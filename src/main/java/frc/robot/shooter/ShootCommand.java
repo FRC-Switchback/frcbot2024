@@ -32,6 +32,6 @@ public class ShootCommand extends Command{
 
     @Override
     public void end(boolean interrupted){
-        CommandScheduler.getInstance().schedule(IntakeCommands.STOW);
+        CommandScheduler.getInstance().schedule(IntakeCommands.STOW.get());
     }
 }

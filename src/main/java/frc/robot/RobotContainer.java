@@ -5,6 +5,7 @@ package frc.robot;
 // import com.pathplanner.lib.commands.FollowPathCommand;
 // import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import com.ctre.phoenix6.jni.SignalLoggerJNI;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,6 +27,7 @@ import frc.robot.shooter.ShootCommand;
 import frc.robot.shooter.ShooterCommands;
 import frc.robot.shooter.ShooterSubsystem;
 import frc.robot.chassis.DriveTestCommand;
+import org.w3c.dom.ls.LSOutput;
 
 
 public class RobotContainer {
@@ -34,18 +37,11 @@ public class RobotContainer {
     SendableChooser<Command> autoChooser;
     //SUBSYSTEM
     TankSubsystem drive = TankSubsystem.getInstance();
-//    ShooterSubsystem shooter = ShooterSubsystem.getInstance();
-//    IntakeSubsystem intake = IntakeSubsystem.getInstance();
+    ShooterSubsystem shooter = ShooterSubsystem.getInstance();
+    IntakeSubsystem intake = IntakeSubsystem.getInstance();
     //COMMANDS
     Command driveCommand = new DriveCommand(driverController::getLeftY,driverController::getRightY);
-//    Command shootCommand = new ShootCommand(intake,shooter);
-//    Command intakeCommand = IntakeCommands.INTAKE;
-//    Command autoIntakeCommand = IntakeCommands.AUTO_INTAKE;
-//    Command disableFlywheels = ShooterCommands.SHOOTER_OFF;
-//    Command shooterAmpSpeed = ShooterCommands.SHOOTER_AMP_SPEED;
-//    Command shooterFullSpeed = ShooterCommands.SHOOTER_FULL_SPEED;
-//    Command stowCommand = IntakeCommands.STOW;
-//    Command ejectCommand = IntakeCommands.EJECT;
+    Command shootCommand = new ShootCommand(intake,shooter);
 
     public RobotContainer() {
         configureAutoBuilder();
@@ -65,14 +61,15 @@ public class RobotContainer {
     }
 
     void configureBindings() {
-//        coDriverController.rightBumper().onTrue(shootCommand);//right trigger shoots the note
-//        coDriverController.leftBumper().whileTrue(intakeCommand.andThen(stowCommand));
-//        coDriverController.y().onTrue(new ParallelCommandGroup(stowCommand, shooterAmpSpeed));//b stows and brings shooter to the slower amp speed
-//                                                                                              // this shouldn't be needed since the intake command already stows when a note is detected
-//        coDriverController.b().onTrue(disableFlywheels);//a sets flywheel to amp speed
-//        coDriverController.a().whileTrue(shooterFullSpeed).onFalse(shooterAmpSpeed);//y sets full shooter speed
-//        coDriverController.x().whileTrue(ejectCommand);
-//
+        coDriverController.rightBumper().onTrue(shootCommand);//right trigger shoots the note
+        coDriverController.leftBumper().whileTrue(IntakeCommands.INTAKE.get()).onFalse(IntakeCommands.STOW.get());
+        coDriverController.rightBumper().onTrue(IntakeCommands.STOW.get());
+        coDriverController.y().onTrue(new ParallelCommandGroup(IntakeCommands.STOW.get(), ShooterCommands.SHOOTER_AMP_SPEED.get()));//y stows and brings shooter to the slower amp speed
+                                                                                                                                    // this shouldn't be needed since the intake command already stows when a note is detected
+        coDriverController.b().onTrue(ShooterCommands.SHOOTER_OFF.get());//a sets flywheel to amp speed
+        coDriverController.a().whileTrue(ShooterCommands.SHOOTER_FULL_SPEED.get()).onFalse(ShooterCommands.SHOOTER_AMP_SPEED.get());//y sets full shooter speed
+        coDriverController.x().whileTrue(IntakeCommands.EJECT.get());
+
 //        SysIdRoutine intakeRoutine = intake.getsysIdRoutine();
 //        driverController.povLeft().whileTrue(intakeRoutine.quasistatic(SysIdRoutine.Direction.kForward));
 //        driverController.povRight().whileTrue(intakeRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
@@ -84,13 +81,13 @@ public class RobotContainer {
 
     void initializeSubsystems() {
         drive.init();
-//        intake.init();
-//        shooter.init();
+        intake.init();
+        shooter.init();
     }
 
     void registerNamedCommands() {
-//        NamedCommands.registerCommand("Shoot", shootCommand);
-//        NamedCommands.registerCommand("Intake", autoIntakeCommand);
+        NamedCommands.registerCommand("Shoot", shootCommand);
+        NamedCommands.registerCommand("Intake", IntakeCommands.AUTO_INTAKE.get());
     }
 
     void configureAutoBuilder() {

@@ -13,6 +13,8 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -38,10 +40,10 @@ public class TankSubsystem extends SubsystemBase{
     private final Encoder leftEncoder = new Encoder(RobotMap.CHASSIS_LEFT_ENCODER[0], RobotMap.CHASSIS_LEFT_ENCODER[1]);
     private final Encoder rightEncoder = new Encoder(RobotMap.CHASSIS_RIGHT_ENCODER[0], RobotMap.CHASSIS_RIGHT_ENCODER[1]);
 
-//    private final AHRS navx = new AHRS();
-//    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navx.getRotation2d(),
-//            getLeftDrivePosition(),
-//            getRightDrivePosition());
+    private final AHRS navx = new AHRS(SerialPort.Port.kMXP);
+    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navx.getRotation2d(),
+            getLeftDrivePosition(),
+            getRightDrivePosition());
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(TankConstants.CHASSIS_WIDTH_METERS);
     private Pose2d currentPose = new Pose2d();
     private final PIDController leftDrivePidController = new PIDController(TankConstants.DRIVE_PID.kP, TankConstants.DRIVE_PID.kI, TankConstants.DRIVE_PID.kD);
@@ -52,12 +54,12 @@ public class TankSubsystem extends SubsystemBase{
     private double rightPosition = getRightDrivePosition();
 
     public void init(){
-        rightmotor.setInverted(true);
-        rightmotorfollow.setInverted(true);
+        leftmotor.setInverted(true);
+        leftmotorfollow.setInverted(true);
         rightmotorfollow.follow(rightmotor);//inverting properly(change if robot moves backwords)
         leftmotorfollow.follow(leftmotor);
-        leftEncoder.setDistancePerPulse(1.0/1024.0);
-        rightEncoder.setDistancePerPulse(1.0/1024.0);
+        leftEncoder.setDistancePerPulse(1.0/2048.0);
+        rightEncoder.setDistancePerPulse(1.0/2048.0);
         leftDrivePidController.setSetpoint(0);
         rightDrivePidController.setSetpoint(0);
         zeroPosition();
@@ -74,9 +76,9 @@ public class TankSubsystem extends SubsystemBase{
         rightLastPosition = rightPosition;
         leftPosition = getLeftDrivePosition();
         rightPosition = getRightDrivePosition();
-//        currentPose = odometry.update(navx.getRotation2d(),
-//                getLeftDrivePosition() ,
-//                getRightDrivePosition());
+        currentPose = odometry.update(navx.getRotation2d(),
+                getLeftDrivePosition() ,
+                getRightDrivePosition());
 
         if (DriverStation.isAutonomous()) {
             leftmotor.set(TalonSRXControlMode.PercentOutput, leftDrivePidController.calculate(getLeftDriveVelocity()));
@@ -118,7 +120,7 @@ public class TankSubsystem extends SubsystemBase{
 
     public void setPose(Pose2d pose) {
         currentPose = pose;
-//        odometry.resetPosition(pose.getRotation(), getLeftDrivePosition(), getRightDrivePosition(), pose);
+        odometry.resetPosition(pose.getRotation(), getLeftDrivePosition(), getRightDrivePosition(), pose);
     }
 
     public Pose2d getPose() {
