@@ -8,5 +8,5 @@ public class IntakeConstants {
     public static final double SETPOINT_TOLERANCE=40;// tune this until all the sequential commands run
                                                      // and don't get stuck bc of the tolerances
 
-    public static final double[] ACTUATOR_PID = {0.1, 0.1, 0.1};// tune this irl
+    public static final double[] ACTUATOR_PID = {2.596, 0, 0.3};// tune this irl
 }
